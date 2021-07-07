@@ -292,3 +292,6 @@ check-memory: ## Check if enough memory has been allocated to Docker
 
 stats: ## Get per-container CPU and memory utilization data
 	docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+
+course-sync: # sync courses from studio to the lms locally
+	docker cp edx.devstack.studio:/edx/var/edxapp/media/scorm - | docker cp - edx.devstack.lms:/edx/var/edxapp/uploads
