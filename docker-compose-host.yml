@@ -18,7 +18,7 @@ services:
 #      - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   lms:
     volumes:
-      - ${DEVSTACK_WORKSPACE}/edx-platform:/edx/app/edxapp/edx-platform:cached
+      - ${DEVSTACK_WORKSPACE}/mentora-edx-platform:/edx/app/edxapp/edx-platform:cached
       - edxapp_node_modules:/edx/app/edxapp/edx-platform/node_modules
       - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
 #  edx_notes_api:
@@ -27,7 +27,7 @@ services:
 #      - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   studio:
     volumes:
-      - ${DEVSTACK_WORKSPACE}/edx-platform:/edx/app/edxapp/edx-platform:cached
+      - ${DEVSTACK_WORKSPACE}/mentora-edx-platform:/edx/app/edxapp/edx-platform:cached
       - edxapp_node_modules:/edx/app/edxapp/edx-platform/node_modules
       - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
 #  forum:
