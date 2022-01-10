@@ -22,6 +22,8 @@ if [ -n "${OPENEDX_RELEASE}" ]; then
 else
     OPENEDX_GIT_BRANCH=master
 fi
+ALWEDX_GIT_BRANCH=develop
+ALWEDX_REPO_NAME=edx-platform
 
 repos=(
     "https://github.com/edx/course-discovery.git"
@@ -30,6 +32,7 @@ repos=(
     "https://github.com/edx/ecommerce.git"
     "https://github.com/edx/edx-e2e-tests.git"
     "https://github.com/edx/edx-notes-api.git"
+    "git@github.com:Advanced-Learning-Company/mentora-edx-platform.git edx-platform"
     "https://github.com/edx/xqueue.git"
     "https://github.com/edx/edx-analytics-pipeline.git"
     "https://github.com/edx/gradebook.git"
@@ -52,12 +55,15 @@ _checkout ()
         # Results of the match are saved to an array called $BASH_REMATCH.
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         # If a directory exists and it is nonempty, assume the repo has been cloned.
         if [ -d "$name" -a -n "$(ls -A "$name" 2>/dev/null)" ]; then
             echo "Checking out branch ${OPENEDX_GIT_BRANCH} of $name"
             cd $name
-            _checkout_and_update_branch
+            _checkout_and_update_branch "$name"
             cd ..
         fi
     done
@@ -78,17 +84,24 @@ _clone ()
         # Results of the match are saved to an array called $BASH_REMATCH.
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         # If a directory exists and it is nonempty, assume the repo has been checked out
         # and only make sure it's on the required branch
         if [ -d "$name" -a -n "$(ls -A "$name" 2>/dev/null)" ]; then
             printf "The [%s] repo is already checked out. Checking for updates.\n" $name
             cd ${DEVSTACK_WORKSPACE}/${name}
-            _checkout_and_update_branch
+            _checkout_and_update_branch "$name"
             cd ..
         else
-            if [ "${SHALLOW_CLONE}" == "1" ]; then
+            if [[ "${SHALLOW_CLONE}" == "1" && "$name" == "${ALWEDX_REPO_NAME}" ]]; then
+                git clone --single-branch -b ${ALWEDX_GIT_BRANCH} -c core.symlinks=true --depth=1 ${repo}
+            elif [ "${SHALLOW_CLONE}" == "1" ]; then
                 git clone --single-branch -b ${OPENEDX_GIT_BRANCH} -c core.symlinks=true --depth=1 ${repo}
+            elif [ "$name" == "${ALWEDX_REPO_NAME}" ]; then
+                git clone --single-branch -b ${ALWEDX_GIT_BRANCH} -c core.symlinks=true ${repo}
             else
                 git clone --single-branch -b ${OPENEDX_GIT_BRANCH} -c core.symlinks=true ${repo}
             fi
@@ -99,10 +112,16 @@ _clone ()
 
 _checkout_and_update_branch ()
 {
+    name="$1"
     GIT_SYMBOLIC_REF="$(git symbolic-ref HEAD 2>/dev/null)"
     BRANCH_NAME=${GIT_SYMBOLIC_REF##refs/heads/}
-    if [ "${BRANCH_NAME}" == "${OPENEDX_GIT_BRANCH}" ]; then
+    if [[ "${BRANCH_NAME}" == "${OPENEDX_GIT_BRANCH}" && "$name" != "${ALWEDX_REPO_NAME}" ]]; then
         git pull origin ${OPENEDX_GIT_BRANCH}
+    elif [[ "$name" == "${ALWEDX_REPO_NAME}" && "${BRANCH_NAME}" == "${ALWEDX_GIT_BRANCH}" ]]; then
+        git pull origin ${ALWEDX_GIT_BRANCH}
+    elif [[ "$name" == "${ALWEDX_REPO_NAME}" && "${BRANCH_NAME}" != "${ALWEDX_GIT_BRANCH}" ]]; then
+        git fetch origin ${ALWEDX_GIT_BRANCH}:${ALWEDX_GIT_BRANCH}
+        git checkout ${ALWEDX_GIT_BRANCH}
     else
         git fetch origin ${OPENEDX_GIT_BRANCH}:${OPENEDX_GIT_BRANCH}
         git checkout ${OPENEDX_GIT_BRANCH}
@@ -127,6 +146,9 @@ reset ()
     do
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         if [ -d "$name" ]; then
             cd $name;git reset --hard HEAD;git checkout master;git reset --hard origin/master;git pull;cd "$currDir"
@@ -144,6 +166,9 @@ status ()
     do
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         if [ -d "$name" ]; then
             printf "\nGit status for [%s]:\n" $name
