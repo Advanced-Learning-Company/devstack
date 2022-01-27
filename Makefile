@@ -262,6 +262,9 @@ analytics-pipeline-shell: ## Run a shell on the analytics pipeline container
 dev.up.analytics_pipeline: | check-memory ## Bring up analytics pipeline services
 	bash -c 'docker-compose -f docker-compose.yml -f docker-compose-analytics-pipeline.yml -f docker-compose-host.yml up -d analyticspipeline'
 
+dev.up.studio:
+	bash -c 'docker-compose -f docker-compose.yml -f docker-compose-host.yml up studio'
+
 pull.analytics_pipeline: ## Update analytics pipeline docker images
 	docker-compose -f docker-compose.yml -f docker-compose-analytics-pipeline.yml pull
 

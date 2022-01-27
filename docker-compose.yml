@@ -153,7 +153,8 @@ services:
       BOK_CHOY_CMS_PORT: 18031
       EDXAPP_TEST_MONGO_HOST: edx.devstack.mongo
       NO_PYTHON_UNINSTALL: 1
-    image: edxops/edxapp:${OPENEDX_RELEASE:-latest}
+      SSH_AUTH_SOCK: /ssh-agent
+    image: edxops/edxapp:alw.${OPENEDX_RELEASE:-latest}
     ports:
       - "18000:18000"
       - "19876:19876" # JS test debugging
@@ -161,7 +162,9 @@ services:
       # - "18031:18031"
     volumes:
       - edxapp_lms_assets:/edx/var/edxapp/staticfiles/
-#
+      - $SSH_AUTH_SOCK:/ssh-agent # Forward local machine SSH key to docker
+
+
 #  edx_notes_api:
 #    command: bash -c 'source /edx/app/edx_notes_api/edx_notes_api_env && while true; do python /edx/app/edx_notes_api/edx_notes_api/manage.py runserver 0.0.0.0:18120 --settings notesserver.settings.devstack; sleep 2; done'
 #    container_name: edx.devstack.edx_notes_api
@@ -201,7 +204,7 @@ services:
       BOK_CHOY_CMS_PORT: 18131
       EDXAPP_TEST_MONGO_HOST: edx.devstack.mongo
       NO_PYTHON_UNINSTALL: 1
-    image: edxops/edxapp:${OPENEDX_RELEASE:-latest}
+    image: edxops/edxapp:alw.${OPENEDX_RELEASE:-latest}
     ports:
       - "18010:18010"
       - "19877:19877" # JS test debugging
