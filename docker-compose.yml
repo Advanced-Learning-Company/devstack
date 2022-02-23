@@ -144,6 +144,7 @@ services:
       - mysql
       - memcached
       - mongo
+      - elasticsearch
     # Allows attachment to the LMS service using 'docker attach <containerID>'.
     stdin_open: true
     tty: true
