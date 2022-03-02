@@ -204,6 +204,7 @@ services:
       BOK_CHOY_CMS_PORT: 18131
       EDXAPP_TEST_MONGO_HOST: edx.devstack.mongo
       NO_PYTHON_UNINSTALL: 1
+      SSH_AUTH_SOCK: /ssh-agent
     image: edxops/edxapp:alw.${OPENEDX_RELEASE:-latest}
     ports:
       - "18010:18010"
@@ -212,6 +213,7 @@ services:
       # - "18131:18131"
     volumes:
       - edxapp_studio_assets:/edx/var/edxapp/staticfiles/
+      - $SSH_AUTH_SOCK:/ssh-agent # Forward local machine SSH key to docker
 
 #  forum:
 #    command: bash -c 'source /edx/app/forum/ruby_env && source /edx/app/forum/devstack_forum_env && cd /edx/app/forum/cs_comments_service && bundle install && while true; do ruby app.rb -o 0.0.0.0 ; sleep 2; done'
