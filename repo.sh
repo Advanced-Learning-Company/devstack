@@ -27,7 +27,7 @@ repos=(
     "https://github.com/edx/ecommerce.git"
     "https://github.com/edx/edx-e2e-tests.git"
     "https://github.com/edx/edx-notes-api.git"
-    "https://github.com/edx/edx-platform.git"
+    "https://github.com/Advanced-Learning-Company/mentora-edx-platform.git"
     "https://github.com/edx/xqueue.git"
     "https://github.com/edx/edx-analytics-pipeline.git"
     "https://github.com/edx/frontend-app-gradebook.git"
@@ -47,7 +47,7 @@ ssh_repos=(
     "git@github.com:edx/ecommerce.git"
     "git@github.com:edx/edx-e2e-tests.git"
     "git@github.com:edx/edx-notes-api.git"
-    "git@github.com:edx/edx-platform.git"
+    "git@github.com:Advanced-Learning-Company/mentora-edx-platform.git"
     "git@github.com:edx/xqueue.git"
     "git@github.com:edx/edx-analytics-pipeline.git"
     "git@github.com:edx/frontend-app-gradebook.git"
@@ -68,7 +68,7 @@ private_repos=(
 if [ -n "${OPENEDX_RELEASE}" ]; then
     OPENEDX_GIT_BRANCH=open-release/${OPENEDX_RELEASE}
 else
-    OPENEDX_GIT_BRANCH=master
+    OPENEDX_GIT_BRANCH=juniper.master.upgraded
     repos+=("${non_release_repos[@]}")
     ssh_repos+=("${non_release_ssh_repos[@]}")
 fi
