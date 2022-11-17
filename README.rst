@@ -117,6 +117,12 @@ All of the services can be run by following the steps below. For analyticstack, 
    (macOS only) Share the cloned service directories in Docker, using
    **Docker -> Preferences -> File Sharing** in the Docker menu.
 
+**NOTE:** Pulling ALW juniper LMS docker image and tagging it. (Below command we need to run before provision and pull commands.)
+ 
+    .. code:: sh
+
+       make pull-juniper-lms
+
 3. Pull any changes made to the various images on which the devstack depends.
 
    .. code:: sh

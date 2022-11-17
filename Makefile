@@ -436,3 +436,6 @@ feature-toggle-state: ## Gather the state of feature toggles configured for vari
 
 selfcheck: ## check that the Makefile is well-formed
 	@echo "The Makefile is well-formed."
+
+pull-juniper-lms: ## pull the juniper LMS image from the docker registry and tag it.
+	./juniper_lms.sh
