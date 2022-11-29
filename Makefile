@@ -439,3 +439,11 @@ selfcheck: ## check that the Makefile is well-formed
 
 pull-juniper-lms: ## pull the juniper LMS image from the docker registry and tag it.
 	./juniper_lms.sh
+
+restore-alw-databases: ## restore mysql & mongo db database
+	perl -i -pe 's/DEFAULT CHARSET=utf8mb4/DEFAULT CHARSET=utf8/' $$(pwd)/.dev/backups/alw_mysql.sql
+	perl -i -pe 's/COLLATE=utf8mb4_unicode_ci/COLLATE=utf8_general_ci/' $$(pwd)/.dev/backups/alw_mysql.sql
+	perl -i -pe 's/COLLATE utf8mb4_unicode_ci/COLLATE utf8_general_ci/' $$(pwd)/.dev/backups/alw_mysql.sql
+	perl -i -pe 's/SET \@\@GLOBAL\.GTID_PURGED=\x27.*?\x27;//gs' $$(pwd)/.dev/backups/alw_mysql.sql
+	cat $$(pwd)/.dev/backups/alw_mysql.sql | docker exec -i $$(make -s dev.print-container.mysql) /usr/bin/mysql -u root edxapp
+	docker exec -i $$(make -s dev.print-container.mongo) mongorestore --archive --gzip < $$(pwd)/.dev/backups/alw_mongo_db.gz
