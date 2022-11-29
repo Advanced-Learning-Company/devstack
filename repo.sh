@@ -22,7 +22,7 @@ if [ -n "${OPENEDX_RELEASE}" ]; then
 else
     OPENEDX_GIT_BRANCH=master
 fi
-ALWEDX_GIT_BRANCH=develop
+ALWEDX_GIT_BRANCH=master
 ALWEDX_REPO_NAME=edx-platform
 
 repos=(
