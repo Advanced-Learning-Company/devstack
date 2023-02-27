@@ -150,6 +150,8 @@ if needs_mongo "$to_provision"; then
 	echo -e "${GREEN}MongoDB ready.${NC}"
 	echo -e "${GREEN}Creating MongoDB users...${NC}"
 	docker-compose $DOCKER_COMPOSE_FILES exec -T mongo bash -c 'mongo' < mongo-provision.js
+	echo -e "${GREEN}Restore MongoDB database...${NC}"
+	docker exec -i $(make -s dev.print-container.mongo) mongorestore --archive --gzip < $(pwd)/.dev/backups/alw_mongo_db.gz
 else
 	echo -e "${GREEN}MongoDB preparation not required; skipping.${NC}"
 fi

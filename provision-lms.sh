@@ -5,7 +5,11 @@ set -x
 apps=( lms studio )
 
 # Load database dumps for the largest databases to save time
-./load-db.sh edxapp
+echo -e "${GREEN}Restore MYSQL database...${NC}"
+perl -i -pe 's/DEFAULT CHARSET=utf8mb4/DEFAULT CHARSET=utf8/' $(pwd)/.dev/backups/alw_mysql.sql
+perl -i -pe 's/COLLATE=utf8mb4_unicode_ci/COLLATE=utf8_general_ci/' $(pwd)/.dev/backups/alw_mysql.sql
+perl -i -pe 's/COLLATE utf8mb4_unicode_ci/COLLATE utf8_general_ci/' $(pwd)/.dev/backups/alw_mysql.sql
+cat $(pwd)/.dev/backups/alw_mysql.sql | docker exec -i $(make -s dev.print-container.mysql) /usr/bin/mysql -u root edxapp
 ./load-db.sh edxapp_csmh
 
 # Bring edxapp containers online
@@ -19,7 +23,7 @@ docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp
 docker-compose restart lms
 
 # Run edxapp migrations first since they are needed for the service users and OAuth clients
-docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && paver update_db --settings devstack_docker'
+# docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && paver update_db --settings devstack_docker'
 
 # Create a superuser for edxapp
 docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp/edxapp_env && python /edx/app/edxapp/edx-platform/manage.py lms --settings=devstack_docker manage_user edx edx@example.com --superuser --staff'
@@ -29,10 +33,10 @@ docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp
 ./enterprise/provision.sh
 
 # Enable the LMS-E-Commerce integration
-docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp/edxapp_env && python /edx/app/edxapp/edx-platform/manage.py lms --settings=devstack_docker configure_commerce'
+# docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp/edxapp_env && python /edx/app/edxapp/edx-platform/manage.py lms --settings=devstack_docker configure_commerce'
 
 # Create demo course and users
-docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c '/edx/app/edx_ansible/venvs/edx_ansible/bin/ansible-playbook /edx/app/edx_ansible/edx_ansible/playbooks/demo.yml -v -c local -i "127.0.0.1," --extra-vars="COMMON_EDXAPP_SETTINGS=devstack_docker"'
+# docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c '/edx/app/edx_ansible/venvs/edx_ansible/bin/ansible-playbook /edx/app/edx_ansible/edx_ansible/playbooks/demo.yml -v -c local -i "127.0.0.1," --extra-vars="COMMON_EDXAPP_SETTINGS=devstack_docker"'
 
 # Fix missing vendor file by clearing the cache
 docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'rm /edx/app/edxapp/edx-platform/.prereqs_cache/Node_prereqs.sha1'
@@ -46,4 +50,4 @@ done
 ./provision-retirement-user.sh retirement retirement_service_worker
 
 # Add demo program
-./programs/provision.sh lms
+# ./programs/provision.sh lms

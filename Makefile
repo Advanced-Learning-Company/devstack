@@ -24,7 +24,7 @@
         stop.watchers stop.xqueue studio-restart studio-shell studio-static \
         studio-update-db studio-watcher-shell update-db upgrade upgrade \
         validate validate-lms-volume vnc-passwords xqueue_consumer-restart \
-        xqueue_consumer-shell xqueue-restart xqueue-shell
+        xqueue_consumer-shell xqueue-restart xqueue-shell pull-juniper-lms-docker-image
 
 # Include options (configurable through options.local.mk)
 include options.mk
@@ -113,10 +113,13 @@ upgrade: ## Upgrade requirements with pip-tools
 dev.checkout: ## Check out "openedx-release/$OPENEDX_RELEASE" in each repo if set, "master" otherwise
 	./repo.sh checkout
 
-dev.clone: ## Clone service repos using HTTPS method to the parent directory
+pull-juniper-lms-docker-image: ## pull the juniper LMS image from the docker registry and tag it.
+	./juniper_lms.sh
+
+dev.clone: pull-juniper-lms-docker-image ## Clone service repos using HTTPS method to the parent directory
 	./repo.sh clone
 
-dev.clone.ssh: ## Clone service repos using SSH method to the parent directory
+dev.clone.ssh: pull-juniper-lms-docker-image ## Clone service repos using SSH method to the parent directory
 	./repo.sh clone_ssh
 
 dev.provision.services: ## Provision default services with local mounted directories
@@ -436,9 +439,6 @@ feature-toggle-state: ## Gather the state of feature toggles configured for vari
 
 selfcheck: ## check that the Makefile is well-formed
 	@echo "The Makefile is well-formed."
-
-pull-juniper-lms: ## pull the juniper LMS image from the docker registry and tag it.
-	./juniper_lms.sh
 
 restore-alw-databases: ## restore mysql & mongo db database
 	perl -i -pe 's/DEFAULT CHARSET=utf8mb4/DEFAULT CHARSET=utf8/' $$(pwd)/.dev/backups/alw_mysql.sql
