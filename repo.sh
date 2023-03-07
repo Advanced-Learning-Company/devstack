@@ -27,7 +27,7 @@ repos=(
     "https://github.com/edx/ecommerce.git"
     "https://github.com/edx/edx-e2e-tests.git"
     "https://github.com/edx/edx-notes-api.git"
-    "https://github.com/Advanced-Learning-Company/mentora-edx-platform.git"
+    "https://github.com/Advanced-Learning-Company/mentora-edx-platform.git edx-platform"
     "https://github.com/edx/xqueue.git"
     "https://github.com/edx/edx-analytics-pipeline.git"
     "https://github.com/edx/frontend-app-gradebook.git"
@@ -47,7 +47,7 @@ ssh_repos=(
     "git@github.com:edx/ecommerce.git"
     "git@github.com:edx/edx-e2e-tests.git"
     "git@github.com:edx/edx-notes-api.git"
-    "git@github.com:Advanced-Learning-Company/mentora-edx-platform.git"
+    "git@github.com:Advanced-Learning-Company/mentora-edx-platform.git edx-platform"
     "git@github.com:edx/xqueue.git"
     "git@github.com:edx/edx-analytics-pipeline.git"
     "git@github.com:edx/frontend-app-gradebook.git"
@@ -85,6 +85,9 @@ _checkout ()
         # Results of the match are saved to an array called $BASH_REMATCH.
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         # If a directory exists and it is nonempty, assume the repo has been cloned.
         if [ -d "$name" ] && [ -n "$(ls -A "$name" 2>/dev/null)" ]; then
@@ -111,6 +114,9 @@ _clone ()
         # Results of the match are saved to an array called $BASH_REMATCH.
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         # If a directory exists and it is nonempty, assume the repo has been checked out
         # and only make sure it's on the required branch
@@ -169,6 +175,9 @@ reset ()
     do
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         if [ -d "$name" ]; then
             cd "$name";git reset --hard HEAD;git checkout master;git reset --hard origin/master;git pull;cd "$currDir"
@@ -186,6 +195,9 @@ status ()
     do
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
+        if [ $name == "mentora-edx-platform" ]; then
+            name="edx-platform"
+        fi
 
         if [ -d "$name" ]; then
             printf "\nGit status for [%s]:\n" "$name"
