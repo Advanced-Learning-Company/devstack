@@ -4,7 +4,6 @@ set -x
 
 apps=( lms studio )
 
-# Load database dumps for the largest databases to save time
 ./load-db.sh edxapp
 ./load-db.sh edxapp_csmh
 
@@ -32,7 +31,7 @@ docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp
 docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'source /edx/app/edxapp/edxapp_env && python /edx/app/edxapp/edx-platform/manage.py lms --settings=devstack_docker configure_commerce'
 
 # Create demo course and users
-docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c '/edx/app/edx_ansible/venvs/edx_ansible/bin/ansible-playbook /edx/app/edx_ansible/edx_ansible/playbooks/demo.yml -v -c local -i "127.0.0.1," --extra-vars="COMMON_EDXAPP_SETTINGS=devstack_docker"'
+# docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c '/edx/app/edx_ansible/venvs/edx_ansible/bin/ansible-playbook /edx/app/edx_ansible/edx_ansible/playbooks/demo.yml -v -c local -i "127.0.0.1," --extra-vars="COMMON_EDXAPP_SETTINGS=devstack_docker"'
 
 # Fix missing vendor file by clearing the cache
 docker-compose $DOCKER_COMPOSE_FILES exec -T lms bash -c 'rm /edx/app/edxapp/edx-platform/.prereqs_cache/Node_prereqs.sha1'
