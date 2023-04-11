@@ -53,9 +53,9 @@ services:
         aliases:
           - edx.devstack.elasticsearch
     # TODO: What to do about these forwarded ports? They'll conflict with ports forwarded by the Vagrant VM.
-    # ports:
-    #   - "9200:9200"
-    #   - "9300:9300"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
       - elasticsearch_data:/usr/share/elasticsearch/logs
@@ -108,8 +108,8 @@ services:
       default:
         aliases:
           - edx.devstack.mongo
-    # ports:
-    #  - "27017:27017"
+    ports:
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
 
@@ -120,7 +120,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ""
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    image: mysql:5.6
+    image: mysql:5.7
     networks:
       default:
         aliases:
