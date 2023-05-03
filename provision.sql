@@ -24,4 +24,9 @@ CREATE DATABASE IF NOT EXISTS edxapp_csmh;
 GRANT ALL ON edxapp.* TO 'edxapp001'@'%' IDENTIFIED BY 'password';
 GRANT ALL ON edxapp_csmh.* TO 'edxapp001'@'%';
 
+/* ALECO start */
+CREATE DATABASE IF NOT EXISTS alw_history;
+GRANT ALL ON alw_history.* TO 'edxapp001'@'%';
+/* ALECO end */
+
 FLUSH PRIVILEGES;
