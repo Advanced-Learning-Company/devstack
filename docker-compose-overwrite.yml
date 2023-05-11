@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3.2"
 services:
   mongo:
     ports:
@@ -8,6 +8,10 @@ services:
       OPENEDX_RELEASE: "juniper:master"
       COMPOSE_PROJECT_NAME: "alw"
       DEVSTACK_WORKSPACE: "/Users/qasim.gulzar/IdeaProjects/ALW"
+    volumes:
+      - ${DEVSTACK_WORKSPACE}/etc/lms.yml:/edx/etc/lms.yml
+      - ${DEVSTACK_WORKSPACE}/etc/studio.yml:/edx/etc/studio.yml
+      - ${DEVSTACK_WORKSPACE}/etc/revisions.yml:/edx/etc/revisions.yml
   mysql:
     ports:
       - "3506:3306"
