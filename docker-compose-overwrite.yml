@@ -40,5 +40,6 @@ services:
     volumes:
       - ${DEVSTACK_WORKSPACE}/shared:/shared
   redis:
+    command: redis-server
     ports:
       - "6379:6379"
