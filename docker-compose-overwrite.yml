@@ -17,6 +17,8 @@ services:
       OPENEDX_RELEASE: "juniper:master"
       COMPOSE_PROJECT_NAME: "alw"
       DEVSTACK_WORKSPACE: "/Users/qasim.gulzar/IdeaProjects/ALW"
+    depends_on:
+      - redis
     volumes:
       - ${DEVSTACK_WORKSPACE}/etc/lms.yml:/edx/etc/lms.yml
       - ${DEVSTACK_WORKSPACE}/etc/studio.yml:/edx/etc/studio.yml
@@ -37,3 +39,6 @@ services:
       - "3506:3306"
     volumes:
       - ${DEVSTACK_WORKSPACE}/shared:/shared
+  redis:
+    ports:
+      - "6379:6379"
